@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>结果</title>
+
+    <link href="resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/fonts/css/font-awesome.css" rel="stylesheet">
+    <link href="resources/css/animate.css" rel="stylesheet">
+    <link href="resources/css/plugins/datatimepicker/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="resources/css/style.css" rel="stylesheet">
+    <link href="resources/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="resources/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="resources/css/loading/loaders.css" rel="stylesheet">
+    <link href="resources/css/plugins/chosen/chosen.css" rel="stylesheet">
+
+
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header col-md-2 text-center">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand col-lg-12" id="navTitle" href="#">全栈猎兵</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navMemu">
+
+                <div class="nav navbar-form navbar-left" role="search">
+                    <div class="form-group navSearchG">
+                        <input type="text" class="form-control navInnerNotWhiteText" id="navSearch" placeholder="搜索问题、标签">
+                            <span class="input-group-btn">
+                                    <button type="button" class="btn btn-primary" onclick="searchIt()"><i class="fa fa-search fa-fw"></i></button>
+                            </span>
+                    </div>
+                    <div class="navbar-abstract-sh-area navInnerNotWhiteText" style="display: none">
+                        <div class="_title navInnerNotWhiteText">标签</div>
+                        <div class="_tag navInnerNotWhiteText" id="Ractive-el-tag">
+                        </div>
+                        <script type="text/ractive" id="Ractive-temp-tag">
+                                {{#each tag}}
+                            <p class="_tag_rows navInnerNotWhiteText" search_tag_id="{{labelId}}" >
+                                <span class="_blue_tag navInnerNotWhiteText" >{{labelTitle}}</span>
+                                <span class="_count_tag navInnerNotWhiteText">{{}}</span>
+                            </p>
+                                {{/each}}
+                            </script>
+                        <div class="_title navInnerNotWhiteText">问题</div>
+                        <div class="_question navInnerNotWhiteText" id="Ractive-el-quest">
+                        </div>
+                        <script type="text/ractive" id="Ractive-temp-quest">
+                                {{#each quest}}
+                            <p class="_question_rows navInnerNotWhiteText" search_quest_id="{{id}}" onclick="location.href='result.html?resultType=quest&&quest_id={{id}}'">
+                                <span class="_question_theme navInnerNotWhiteText">{{problemTitle}}</span>
+                                <span class="_question_count navInnerNotWhiteText">{{answerCount}}个回答</span>
+                            </p>
+                                {{/each}}
+                            </script>
+                        <div class="_footer navInnerNotWhiteText">
+                            <div class="_check-all navInnerNotWhiteText" onclick="window.open( 'result.html?resultType=quest_tag?quest_title=' + document.getElementById( 'navSearch' ).value )">查看全部搜索结果</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav navbar-nav navbar-left navbar-form">
+                    <li><div class="btn btn-primary" id="ask-Btn">提问</div></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="lobby.html">大厅</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#">知识库</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown-menu-left">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">消息<span class="caret"></span></a>
+                        <ul class="dropdown-menu nav_message_filed" id="Ractive-el-message">
+                        </ul>
+                        <script id="Ractive-temp-message" type="text/ractive">
+                            {{#each messages}}
+                            <li><a class="navInnerNotWhiteText" id="{{id}}" href="#">{{messageContent}}<span class="navInnerNotWhiteText _time">{{messageCreateTime}}</span></a></li>
+                            {{/each}}
+                            {{#if counts > 1}}
+                            <li class="divider"></li>
+                            <li><a class="navInnerNotWhiteText" href="result.html?resultType=message">查看更多</a></li>
+                            {{/if}}
+                        </script>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#" id="feedback-Btn">反馈</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right nav_profile hidden">
+                    <li><img class="img-circle" id="nav_profile_img" src="resources/images/profile_small.jpg"><a id="nav_profile_name" href="#">Link</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+
+<main role="main" class="result_quest_tag">
+    <div class="main_body_lobby">
+        <div class="main_body_lobby_RT main_body_result">
+            <div class="lobby_right_content">
+                <ul class="main_right_content_qs_st_select NoUlStyle">
+                    <li class="_select active" li-seclect="result_quest">问答</li>
+                    <!--<li class="_select" li-seclect="result_tag">标签</li>-->
+                </ul>
+                <ul class="main_right_content_questionL result_quest result_hidden" id="Ractive-el-questionL">
+                </ul>
+                <script id="Ractive-temp-questionL" type="text/ractive">
+                        {{#each questionL}}
+                         <li class="main_right_content_questions" id="{{id}}">
+                        <div class="main_right_content_left">
+                            <img class="img-circle" src="resources/images/profile.jpg" />
+                            <div class="_notice">
+                                <p>765</p>
+                                <p>关注</p>
+                            </div>
+                        </div>
+                        <div class="main_right_content_center">
+                            <div class="_name_bonus">
+                                {{problemAuthor}}<span class="lobby_user_area_bonus">{{problemIntegral}}</span>
+                            </div>
+                            <div class="_tag">
+                                标签<span>{{problemLabel}}</span>
+                            </div>
+                            <div class="_title_row">
+                                <span class="_title" >{{problemTitle}}</span>
+                            </div>
+                            <div class="_question_content">{{problemContent}}</div>
+                            <div class="_reply_area">
+                                {{#if problemStatus == '进行中' }}
+                                <p>写入答案......</p>
+                                {{/if}}
+                                <div class="_reply_summerNote">
+                                    <div class="reply_summerNote" replay_quest_content="{{id}}" ></div>
+                                    <div class="btn btn-primary" replay_quest_id="{{id}}" onclick="bind_replay( this )" >发布</div>
+                                    <div class="btn btn-primary btn_my_white _reply_summerNote_cancel">取消</div>
+                                </div>
+                            </div>
+                            <div class="_date_answerC">
+                                <span class="_date">{{problemCreateTime}}</span> <span class="only_pointer"><span answer_quest_id="{{id}}">回答</span>(<span class="_anserC">{{answerCount}}</span>)<a class="_half_triangle"></a></span>
+                            </div>
+                            <div class="_answer_area" id="_answer_area{{id}}" answer_quest_status="{{problemStatus}}">
+                            </div>
+                        </div>
+                        <div class="main_right_content_right">
+                            <div class="_oblique_halfT {{#if problemStatus != '进行中' }} my_question_done {{/if}}"></div>
+                            <div class="_oblique_halfT_text">{{problemStatus}}</div>
+                        </div>
+                    </li>
+                    {{/each}}
+                        {{#if toPage < counts }}
+                        <div class="list_bottom_more_btn btn btn_my_white" onclick = "moreQuestions( this )" >更多</div>
+                        {{/if}}
+                </script>
+                <script type="text/ractive" id="Ractive-temp-answer_reply">
+                     {{#each answerDate}}
+                                <div class="_answers" id="{{id}}">
+                                    <div class="_left">
+                                        <img class="img-circle" src="resources/images/profile.jpg" />
+                                        <div class="_notice">
+                                            <p>765</p>
+                                            <p>赞</p>
+                                        </div>
+                                    </div>
+                                    <div class="_right">
+                                        <p>{{userName}} {{#if replyName != ''}}<span class="_reply_grey">回复</span><span class="_reply_to_who">{{replyName}}</span>{{/if}}<span class="adopt_medal_intro" style="visibility : {{#if answerStatus == '已采纳' }}hidden{{/if}}">提问人采纳</span><span class="btn btn_my_white btn-real-sm" onclick="check_accessFunc( this )" style="visibility : {{#if answerStatus == '已采纳' }}hidden{{/if}}">查看评价</span></p>
+                                        {{{answerContent}}}
+                                        <p><span>{{answerCreateTime}}</span>{{#if answersProblemStatus == '进行中' }}<span class="only_pointer">回复</span>{{/if}}</p>
+                                        <div class="_reply_area">
+                                            <div class="_reply_summerNote">
+                                                <div class="reply_summerNote"></div>
+                                                <div class="btn btn-primary" replay_submit_id="{{id}}" replay_submit_userId="{{userId}}" replay_submit_userName="{{userName}}" >发布</div>
+                                                <div class="btn btn-primary btn_my_white _reply_summerNote_cancel">取消</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                                {{#if counts > 1 }}
+                                <div class="list_bottom_more_btn btn btn_my_white" onClick = "moreAnswers( this )">更多</div>
+                                {{/if}}
+                </script>
+<!--
+                <ul class="main_right_content_questionL result_tag result_hidden">
+                    <li class="main_right_content_questions">
+                        <div class="main_right_content_left">
+                            <img class="tag_icon" src="resources/images/result_html.png" />
+                        </div>
+                        <div class="main_right_content_center">
+                            <div class="_title_row">
+                                <span class="_title tag_title">技术架构好学吗？</span>
+                            </div>
+                            <div class="_question_content">技术架构好学吗？有人知道吗？我希望能有一个具体的回答。</div>
+                            <div class="_date_answerC">
+                                <span class="only_pointer"><span class="_anserC">3</span>个<span>回答</span><a class="_half_triangle"></a></span>
+                            </div>
+                        </div>
+                        <div class="main_right_content_right">
+                            <div class="_question_close btn btn_my_white tag_check_btn">查看标签</div>
+                        </div>
+                    </li>
+                </ul>
+-->
+            </div>
+        </div>
+    </div>
+</main>
+
+<main role="main" class="result_tag">
+    <div class="main_body_lobby">
+        <div class="main_body_lobby_RT main_body_result">
+            <div class="main_right_content_questions">
+                <div class="main_right_content_left result_tag_title">
+                    <img class="tag_icon" src="resources/images/result_html.png" />
+                </div>
+                <div class="main_right_content_center result_tag_title">
+                    <div class="_title_row">
+                        <span class="_title tag_title">技术架构好学吗？</span>
+                    </div>
+                    <div class="_question_content">技术架构好学吗？有人知道吗？我希望能有一个具体的回答。</div>
+                </div>
+            </div>
+            <div class="result_tag_count_row">
+                <a>2</a>个问答
+            </div>
+            <div class="lobby_right_content">
+                <ul class="main_right_content_questionL result_quest">
+                    <li class="main_right_content_questions">
+                        <div class="main_right_content_left">
+                            <img class="img-circle" src="resources/images/profile.jpg" />
+                            <div class="_notice">
+                                <p>765</p>
+                                <p>关注</p>
+                            </div>
+                        </div>
+                        <div class="main_right_content_center">
+                            <div class="_name_bonus">
+                                乔布斯<span class="lobby_user_area_bonus">500</span>
+                            </div>
+                            <div class="_tag">
+                                标签<span>html5</span><span>软件架构</span>
+                            </div>
+                            <div class="_title_row">
+                                <span class="_title">技术架构好学吗？</span>
+                            </div>
+                            <div class="_question_content">技术架构好学吗？有人知道吗？我希望能有一个具体的回答。</div>
+                            <div class="_reply_area">
+                                {{#if problemStatus == '进行中' }}
+                                <p>写入答案......</p>
+                                {{/if}}
+                                <div class="_reply_summerNote">
+                                    <div class="reply_summerNote"></div>
+                                    <div class="btn btn-primary">发布</div>
+                                    <div class="btn btn-primary btn_my_white _reply_summerNote_cancel">取消</div>
+                                </div>
+                            </div>
+                            <div class="_date_answerC">
+                                <span class="_date">2015-12-24  12:30:32</span> <span class="only_pointer"><span>回答</span>(<span class="_anserC">3</span>)<a class="_half_triangle"></a></span>
+                            </div>
+                            <div class="_answer_area">
+                                <div class="_answers">
+                                    <div class="_left">
+                                        <img class="img-circle" src="resources/images/profile.jpg" />
+                                        <div class="_notice">
+                                            <p>765</p>
+                                            <p>赞</p>
+                                        </div>
+                                    </div>
+                                    <div class="_right">
+                                        <p>Jobs</p>
+                                        <p>
+                                            管理的目的是效率。管理的核心是人。
+                                            企业稳定持续的发展，要提高核心竞争力。
+                                            核心竞争力
+                                            企业核心竞争力，本来就是体现在特定的能力上。而这种能力本身又可以视为多种能力的聚合，因而是完全可以分解的。企业核心竞争力，从其具体体现形式分析，可大体分解为十个内容
+                                        </p>
+                                        <p><span>10-25 13:32</span><span class="only_pointer">回复</span></p>
+                                        <div class="_reply_area">
+                                            <div class="_reply_summerNote">
+                                                <div class="reply_summerNote"></div>
+                                                <div class="btn btn-primary">发布</div>
+                                                <div class="btn btn-primary btn_my_white _reply_summerNote_cancel">取消</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="_answers">
+                                    <div class="_left">
+                                        <img class="img-circle" src="resources/images/profile.jpg" />
+                                        <div class="_notice">
+                                            <p>765</p>
+                                            <p>赞</p>
+                                        </div>
+                                    </div>
+                                    <div class="_right">
+                                        <p>Jobs</p>
+                                        管理的目的是效率。管理的核心是人。
+                                        企业稳定持续的发展，要提高核心竞争力。
+                                        核心竞争力
+                                        企业核心竞争力，本来就是体现在特定的能力上。而这种能力本身又可以视为多种能力的聚合，因而是完全可以分解的。企业核心竞争力，从其具体体现形式分析，可大体分解为十个内容
+                                        <p><span>10-25 13:32</span><span class="only_pointer">回复</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main_right_content_right">
+                            <div class="_oblique_halfT my_question_done select_to_show"></div>
+                            <div class="_oblique_halfT_text my_question_done select_to_show">已结束</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+
+<main role="main" class="result_quest">
+    <div class="main_body_lobby">
+        <div class="main_body_lobby_RT main_body_result" id="Ractive-el-questDetial">
+        </div>
+        <script id="Ractive-temp-questDetial" type="text/ractive">
+                        {{#each questionL}}
+            <div class="main_body_result_headline">问题详情<span class="pull-right _return only_pointer" onclick="javascript:void history.back()">返回</span></div>
+            <div class="main_right_content_questions">
+                <div class="main_right_content_left">
+                    <img class="img-circle" src="resources/images/profile.jpg" />
+                    <div class="_notice">
+                        <p>765</p>
+                        <p>关注</p>
+                    </div>
+                </div>
+                <div class="main_right_content_center">
+                    <div class="_name_bonus">
+                        {{problemAuthor}}<span class="lobby_user_area_bonus">{{problemIntegral}}</span>
+                    </div>
+                    <div class="_tag">
+                        标签<span>{{problemLabel}}</span>
+                    </div>
+                    <div class="_title_row">
+                        <span class="_title">{{problemTitle}}</span>
+                    </div>
+                    <div class="_question_content">{{problemContent}}</div>
+                    <div class="_reply_area">
+                        {{#if problemStatus == '进行中' }}
+                        <p>写入答案......</p>
+                        {{/if}}
+                        <div class="_reply_summerNote">
+                            <div class="reply_summerNote" replay_quest_content="{{id}}" ></div>
+                            <div class="btn btn-primary" replay_quest_id="{{id}}" onclick="bind_replay( this )" >发布</div>
+                            <div class="btn btn-primary btn_my_white _reply_summerNote_cancel">取消</div>
+                        </div>
+                    </div>
+                    <div class="_date_answerC">
+                        <span class="_date">{{problemCreateTime}}</span>
+                    </div>
+                </div>
+                <div class="main_right_content_right">
+                    <div class="_oblique_halfT {{#if problemStatus != '进行中' }} my_question_done {{/if}}"></div>
+                    <div class="_oblique_halfT_text">{{problemStatus}}</div>
+                </div>
+            </div>
+            <div class="result_tag_count_row">
+                <a>{{answerCount}}</a>个回答
+            </div>
+            <div class="lobby_right_content">
+                <ul class="main_right_content_questionL result_quest">
+                    <li class="main_right_content_questions">
+                        <div class="main_right_content_center my_answer_width_full">
+                            <div class="_answer_area result_answer_show" id="_answer_area{{id}}" answer_quest_status="{{problemStatus}}">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+                    {{/each}}
+                </script>
+        <script type="text/ractive" id="Ractive-temp-answer_reply">
+                     {{#each answerDate}}
+                                <div class="_answers" id="{{id}}">
+                                    <div class="_left">
+                                        <img class="img-circle" src="resources/images/profile.jpg" />
+                                        <div class="_notice">
+                                            <p>765</p>
+                                            <p>赞</p>
+                                        </div>
+                                    </div>
+                                    <div class="_right">
+                                        <p>{{userName}} {{#if replyName && replyName != ''}}<span class="_reply_grey">回复</span><span class="_reply_to_who">{{replyName}}</span>{{/if}}<span class="adopt_medal_intro" style="visibility : {{#if answerStatus != '已采纳' }}hidden{{/if}}">提问人采纳</span><span class="btn btn_my_white btn-real-sm" onclick="check_accessFunc( this )" style="visibility : {{#if answerStatus != '已采纳' }}hidden{{/if}}">查看评价</span></p>
+                                        {{{answerContent}}}
+                                        <p><span>{{answerCreateTime}}</span>{{#if answersProblemStatus == '进行中' }}<span class="only_pointer">回复</span>{{/if}}</p>
+                                        <div class="_reply_area">
+                                            <div class="_reply_summerNote">
+                                                <div class="reply_summerNote"></div>
+                                                <div class="btn btn-primary" replay_submit_id="{{id}}" replay_submit_userId="{{userId}}" replay_submit_userName="{{userName}}" >发布</div>
+                                                <div class="btn btn-primary btn_my_white _reply_summerNote_cancel">取消</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/each}}
+                                {{#if counts > 1 }}
+                                <div class="list_bottom_more_btn btn btn_my_white" onClick = "moreAnswers( this )">更多</div>
+                                {{/if}}
+                </script>
+
+    </div>
+</main>
+
+<main role="main" class="result_message">
+    <div class="main_body_lobby">
+        <div class="main_body_lobby_RT main_body_result" id="Ractive-el-questDetial">
+        </div>
+        <script id="Ractive-temp-questDetial" type="text/ractive">
+                        {{#each questionL}}
+            <div class="result_tag_count_row result_message_row">
+                {{messageContent}}<span class="_time">{{messageCreateTime}}</span>
+            </div>
+                        {{/each}}
+                        {{#if toPage < counts }}
+                        <div class="list_bottom_more_btn btn btn_my_white" onclick = "moreQuestions( this )" >更多</div>
+                        {{/if}}
+                    </script>
+    </div>
+</main>
+
+<div class="navbar_question_modal">
+    <div class="_question_modal_titlebar">
+        <p class="_title">提问</p>
+    </div>
+    <div class="_question_modal_body">
+        <p class="_title">标题：<span>（必填）</span></p>
+        <div class="_input">
+            <input navbar_question_modalId="problemTitle" type="text" placeholder="请填写标题" maxlength="50"/>
+        </div>
+        <p class="_title">问题说明：</p>
+        <div class="_input">
+            <textarea navbar_question_modalId="problemContent" type="text" placeholder="问题的详细信息" maxlength="800"></textarea>
+        </div>
+        <p class="_title">选择标签：<span>（至少选择一个标签）</span><a>选择的标签越精确，越容易让相关领域专业人士看到你的问题</a></p>
+        <div class="_input">
+            <div id="modal_qsTag" ></div>
+
+            <script id="modal_qsTag_tpl" type="text/ractive">
+             <select class="chosen-select" id="modal_qsTag_select" data-placeholder="请选择" multiple navbar_question_modalId="problemLabel" >
+                {{#each LabelList}}
+                 <option>{{labelTitle}}</option>
+                {{/each}}
+             </select>
+            </script>
+
+            <div class="_recommend">
+                <span>推荐标签：</span>
+                <a>
+                    <span>HTML5</span>
+                </a>
+            </div>
+        </div>
+        <p class="_title">设置赏金：<span>（必填）</span></p>
+        <div class="_bonus_setting">
+            <p><input type="text" class="_bonus" navbar_question_modalId="problemIntegral" /><span>剩余金币：</span><span id="left_account_bonus">500</span><a href="">去充值</a></p>
+            <div class="_bonus_setting_recommend">
+                <div class="_title">建议：</div>
+                <div class="_content"><!--您选择的标签为<span>html5</span>，建议设置赏金100-600金币，若回答要求代码，建议设置赏金500-1000金币，也可根据问题难度或特别要求设置赏金。-->
+                    一般难度建议设置赏金为50-100，中等难度建议设置赏金为100-500较高难度建议设置赏金500-1000，也可根据问题特别要求设置赏金
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="_question_modal_footer">
+        <div class="btn btn-primary btn_my_white" id="cancel-qs-modal">取消</div>
+        <div class="btn btn-primary" id="submit-qs-modal">发布</div>
+    </div>
+</div>
+
+<div class="navbar_feedback_modal">
+    <div class="_feedback_modal_titlebar">
+        <p class="_title">反馈</p>
+    </div>
+    <div class="_feedback_modal_body">
+        <div class="_input">
+            <textarea class="form-control" navbar_feedback_modalId="feedbackContent" type="text" placeholder="输入您的意见或者建议"></textarea>
+        </div>
+    </div>
+    <div class="_feedback_modal_footer">
+        <div class="btn btn-primary btn_my_white" id="cancel-fb-modal">取消</div>
+        <div class="btn btn-primary" id="submit-fb-modal">发布</div>
+    </div>
+</div>
+
+
+<div class="screen_mask"></div>
+
+<div class="access_modal" style="height: 223px">
+    <div class="_access_modal_titlebar">
+        <p class="_title">评价<span class="cross_closs only_pointer">×</span></p>
+    </div>
+    <div class="_access_modal_body">
+        <div class="access_stars">
+            <div class="access_star only_pointer" lightUp_mun = '1'></div>
+            <div class="access_star only_pointer" lightUp_mun = '2'></div>
+            <div class="access_star only_pointer" lightUp_mun = '3'></div>
+            <div class="access_star only_pointer" lightUp_mun = '4'></div>
+            <div class="access_star only_pointer" lightUp_mun = '5'></div>
+        </div>
+        <p class="_title" id="access_comment"></p>
+    </div>
+</div>
+
+
+<script data-main="resources/scripts/result" src="resources/scripts/lib/require.js"></script>
+
+</body>
+</html>

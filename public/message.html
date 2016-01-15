@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>结果</title>
+
+    <link href="resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/fonts/css/font-awesome.css" rel="stylesheet">
+    <link href="resources/css/animate.css" rel="stylesheet">
+    <link href="resources/css/plugins/datatimepicker/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="resources/css/style.css" rel="stylesheet">
+    <link href="resources/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="resources/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="resources/css/loading/loaders.css" rel="stylesheet">
+
+
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header col-md-2 text-center">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand col-lg-12" id="navTitle" href="#">全栈猎兵</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navMemu">
+
+                <div class="nav navbar-form navbar-left" role="search">
+                    <div class="form-group navSearchG">
+                        <input type="text" class="form-control navInnerNotWhiteText" id="navSearch" placeholder="搜索问题、标签">
+                            <span class="input-group-btn">
+                                    <button type="button" class="btn btn-primary" onclick="searchIt()"><i class="fa fa-search fa-fw"></i></button>
+                            </span>
+                    </div>
+                    <div class="navbar-abstract-sh-area navInnerNotWhiteText" style="display: none">
+                        <div class="_title navInnerNotWhiteText">标签</div>
+                        <div class="_tag navInnerNotWhiteText" id="Ractive-el-tag">
+                        </div>
+                        <script type="text/ractive" id="Ractive-temp-tag">
+                                {{#each tag}}
+                            <p class="_tag_rows navInnerNotWhiteText" search_tag_id="{{labelId}}" >
+                                <span class="_blue_tag navInnerNotWhiteText" >{{labelTitle}}</span>
+                                <span class="_count_tag navInnerNotWhiteText">{{}}</span>
+                            </p>
+                                {{/each}}
+                            </script>
+                        <div class="_title navInnerNotWhiteText">问题</div>
+                        <div class="_question navInnerNotWhiteText" id="Ractive-el-quest">
+                        </div>
+                        <script type="text/ractive" id="Ractive-temp-quest">
+                                {{#each quest}}
+                            <p class="_question_rows navInnerNotWhiteText" search_quest_id="{{id}}" onclick="location.href='result.html?resultType=quest&&quest_id={{id}}'">
+                                <span class="_question_theme navInnerNotWhiteText">{{problemTitle}}</span>
+                                <span class="_question_count navInnerNotWhiteText">{{answerCount}}个回答</span>
+                            </p>
+                                {{/each}}
+                            </script>
+                        <div class="_footer navInnerNotWhiteText">
+                            <div class="_check-all navInnerNotWhiteText" onclick="window.open( 'result.html?resultType=quest_tag?quest_title=' + document.getElementById( 'navSearch' ).value )">查看全部搜索结果</div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav navbar-nav navbar-left navbar-form">
+                    <li><div class="btn btn-primary" id="ask-Btn">提问</div></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="lobby.html">大厅</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#">知识库</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown-menu-left">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">消息<span class="caret"></span></a>
+                        <ul class="dropdown-menu nav_message_filed" id="Ractive-el-message">
+                        </ul>
+                        <script id="Ractive-temp-message" type="text/ractive">
+                            {{#each messages}}
+                            <li><a class="navInnerNotWhiteText" id="{{id}}" href="#">{{messageContent}}<span class="navInnerNotWhiteText _time">{{messageCreateTime}}</span></a></li>
+                            {{/each}}
+                            {{#if counts > 1}}
+                            <li class="divider"></li>
+                            <li><a class="navInnerNotWhiteText" href="result.html?resultType=message">查看更多</a></li>
+                            {{/if}}
+                        </script>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#" id="feedback-Btn">反馈</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right nav_profile hidden">
+                    <li><img class="img-circle" id="nav_profile_img" src="resources/images/profile_small.jpg"><a id="nav_profile_name" href="#">Link</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+
+<main role="main">
+    <div class="main_body_lobby">
+        <div class="main_body_lobby_RT main_body_result">
+            <div class="lobby_right_content">
+                <ul class="main_right_content_qs_st_select NoUlStyle">
+                    <li class="_select active" li-seclect="message_account_setting">账号设置</li>
+                    <li class="_select" li-seclect="message_account_change_pw">修改密码</li>
+                </ul>
+                <div class="register_division message_width">
+                    <div class="register_division_inputG message_account_setting">
+                        <input placeholder="手机号（仅支持中国大陆）" message_account_settingId="userPhone" />
+                        <input type="email" placeholder="邮箱" message_account_settingId="userEmail" />
+                    </div>
+                    <div class="register_division_inputG message_account_change_pw">
+                        <input type="password" placeholder="输入旧密码" message_account_change_pwId="oldPassword" />
+                        <input type="password" placeholder="输入新密码" message_account_change_pwId="password" />
+                        <input type="password" placeholder="再次输入新密码" message_account_change_pwId="rePassword" />
+                    </div>
+                    <div class="login_division_BtnG">
+                        <div class="btn btn-primary col-md-12" id="modifyBtn">修改</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="navbar_question_modal">
+    <div class="_question_modal_titlebar">
+        <p class="_title">提问</p>
+    </div>
+    <div class="_question_modal_body">
+        <p class="_title">标题：<span>（必填）</span></p>
+        <div class="_input">
+            <input navbar_question_modalId="problemTitle" type="text" placeholder="请填写标题" maxlength="50"/>
+        </div>
+        <p class="_title">问题说明：</p>
+        <div class="_input">
+            <textarea navbar_question_modalId="problemContent" type="text" placeholder="问题的详细信息" maxlength="800"></textarea>
+        </div>
+        <p class="_title">选择标签：<span>（至少选择一个标签）</span><a>选择的标签越精确，越容易让相关领域专业人士看到你的问题</a></p>
+        <div class="_input">
+            <div id="modal_qsTag" ></div>
+
+            <script id="modal_qsTag_tpl" type="text/ractive">
+             <select class="chosen-select" id="modal_qsTag_select" data-placeholder="请选择" multiple navbar_question_modalId="problemLabel" >
+                {{#each LabelList}}
+                 <option>{{labelTitle}}</option>
+                {{/each}}
+             </select>
+            </script>
+
+            <div class="_recommend">
+                <span>推荐标签：</span>
+                <a>
+                    <span>HTML5</span>
+                </a>
+            </div>
+        </div>
+        <p class="_title">设置赏金：<span>（必填）</span></p>
+        <div class="_bonus_setting">
+            <p><input type="text" class="_bonus" navbar_question_modalId="problemIntegral" /><span>剩余金币：</span><span id="left_account_bonus">500</span><a href="">去充值</a></p>
+            <div class="_bonus_setting_recommend">
+                <div class="_title">建议：</div>
+                <div class="_content"><!--您选择的标签为<span>html5</span>，建议设置赏金100-600金币，若回答要求代码，建议设置赏金500-1000金币，也可根据问题难度或特别要求设置赏金。-->
+                    一般难度建议设置赏金为50-100，中等难度建议设置赏金为100-500较高难度建议设置赏金500-1000，也可根据问题特别要求设置赏金
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="_question_modal_footer">
+        <div class="btn btn-primary btn_my_white" id="cancel-qs-modal">取消</div>
+        <div class="btn btn-primary" id="submit-qs-modal">发布</div>
+    </div>
+</div>
+
+<div class="navbar_feedback_modal">
+    <div class="_feedback_modal_titlebar">
+        <p class="_title">反馈</p>
+    </div>
+    <div class="_feedback_modal_body">
+        <div class="_input">
+            <textarea class="form-control" navbar_feedback_modalId="feedbackContent" type="text" placeholder="输入您的意见或者建议"></textarea>
+        </div>
+    </div>
+    <div class="_feedback_modal_footer">
+        <div class="btn btn-primary btn_my_white" id="cancel-fb-modal">取消</div>
+        <div class="btn btn-primary" id="submit-fb-modal">发布</div>
+    </div>
+</div>
+
+
+<div class="screen_mask"></div>
+
+<div class="access_modal" style="height: 223px">
+    <div class="_access_modal_titlebar">
+        <p class="_title">评价<span class="cross_closs only_pointer">×</span></p>
+    </div>
+    <div class="_access_modal_body">
+        <div class="access_stars">
+            <div class="access_star only_pointer" lightUp_mun = '1'></div>
+            <div class="access_star only_pointer" lightUp_mun = '2'></div>
+            <div class="access_star only_pointer" lightUp_mun = '3'></div>
+            <div class="access_star only_pointer" lightUp_mun = '4'></div>
+            <div class="access_star only_pointer" lightUp_mun = '5'></div>
+        </div>
+        <p class="_title" id="access_comment"></p>
+    </div>
+</div>
+
+<script data-main="resources/scripts/message" src="resources/scripts/lib/require.js"></script>
+
+</body>
+</html>

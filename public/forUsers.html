@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="resources/scripts/lib/jquery-2.1.1.js"></script>
+    <script src="resources/scripts/lib/Ractive.js"></script>
+    <script src="resources/scripts/lib/bootstrap-3.3.5/bootstrap.min.js"></script>
+    <script>
+        getAjax = function ( url, params, callback ){
+
+
+            var param = {
+                url : appSocket + url + '?' + decodeURIComponent( $.param( params ) ).replace( /'/, '' ),
+                data : {},
+                method : 'get'
+            }
+
+            ajaxRequest( param, callback )
+
+        }
+
+        postAjax = function ( url, data, callback ){
+
+
+            var param = {
+                url : appSocket + url,
+                data : data,
+                method : 'post'
+            }
+
+            ajaxRequest( param, callback )
+        }
+
+
+
+        AppConfig = function( judge ){
+            var _me = this;
+            var appSocketJudegeFunc = function( innerJudge ){
+                var appSocketJudegeFuncInnerUrl
+                if( innerJudge ){
+                    //TODO 跨域ajax
+                    appSocketJudegeFuncInnerUrl =  'http://10.0.2.177:3000';
+                    //appSocketJudegeFuncInnerUrl =  'http://117.25.129.232:15409';//外网
+                    //appSocketJudegeFuncInnerUrl =  'http://10.0.2.21:3009';//外网
+                    //appSocketJudegeFuncInnerUrl = 'http://192.168.10.207:3333/Skyroam_OES';
+                    //appSocketJudegeFuncInnerUrl = 'http://192.168.10.207:3333/Skyroam_OES';
+                    //appSocketJudegeFuncInnerUrl = 'http://192.168.173.1:3333/Skyroam_OES';
+                    //appSocketJudegeFuncInnerUrl = 'http://192.168.3.231:3333/Skyroam_OES';
+                    //appSocketJudegeFuncInnerUrl = 'http://192.168.6.65:3333/Skyroam_OES';
+                    //appSocketJudegeFuncInnerUrl = 'http://192.168.1.101:3333/Skyroam_OES';
+                }
+                else{
+                    //TODO 本地服务ajax
+                    appSocketJudegeFuncInnerUrl = '';
+                }
+                return appSocketJudegeFuncInnerUrl
+            }
+            _me.judgement = judge
+            _me.appSocket = appSocketJudegeFunc( judge )
+            _me.ajaxRequest = function( params, CallBack ){
+                var innerUrl,
+                        innerData,
+                        innerMethod,
+                        UndealData;
+
+                for( var i in params.data ){
+                    try{
+                        if( i == 'null' || i == null ) delete params.data[ i ]
+                    }
+                    catch( err ){
+                        console.log( 'deleteNullError------', err )
+                    }
+
+                    try{
+                        if( i == 'payTypeOfForegift' && params.data[i] == 5 )  params.data[ 'realForegift' ] = 0
+                    }
+                    catch( err ){
+                        console.log( 'payTypeOfForegiftError------', err )
+                    }
+                }
+
+                ats( params );
+
+                if( _me.judgement ){
+                    //TODO 跨域ajax
+                    innerUrl    =  '/commonAction/ajaxRequest';
+                    innerData   = params;
+                    innerMethod = 'post';
+                }
+                else{
+                    //TODO 本地服务ajax
+                    innerUrl       = params.url;
+                    innerData      = params.data ;
+                    innerMethod    = params.method;
+                }
+
+
+                var ajax = $.ajax({
+                    url  : innerUrl,
+                    data : innerData,
+                    type : innerMethod,
+                    async: true,
+                    beforeSend : function( request ) {
+                        request.setRequestHeader( "token", localStorage.getItem('token') );
+                    },
+                    dataType : "json",
+                    success : function( data ){
+                        CallBack( data )
+                    },
+                    timeout : 60 * 1000,
+                    error : function( err ){
+                        if( err.statusText == 'timeout' ) {
+
+                            ajax.abort();
+
+                        }
+                    }
+                });
+            }
+        }
+
+        var specialAppConfig = new AppConfig( false )
+
+        ajaxRequest = specialAppConfig.ajaxRequest
+    </script>
+</head>
+<body>
+<table>
+    <thead>
+    <tr><td>姓名</td><td>充值</td><td>确定</td></tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            {{ddd}}
+        </td>
+        <td>
+            <input type="text"/>
+        </td>
+        <td>
+            <input type="button" value="确定"/>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+</body>
+<script>
+    getAjax()
+</script>
+</html>

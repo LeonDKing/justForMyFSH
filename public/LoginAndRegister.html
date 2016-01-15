@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>登录/注册</title>
+
+    <link href="resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/fonts/css/font-awesome.css" rel="stylesheet">
+    <link href="resources/css/animate.css" rel="stylesheet">
+    <link href="resources/css/plugins/datatimepicker/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="resources/css/style.css" rel="stylesheet">
+    <link href="resources/css/loading/loaders.css" rel="stylesheet">
+
+
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header col-md-2 text-center">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand col-lg-12" id="navTitle" href="#">全栈猎兵</a>
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav>
+</header>
+
+<main role="main">
+    <div class="main_body">
+        <div class="main_body_left">
+            <section class="login_register_area">
+                <ul class="loginOrOut_type_select">
+                    <li class="loginOrOut_type_select_btn active" show-division="login_division"><span>登录</span></li>
+                    <li class="loginOrOut_type_select_btn"  show-division="register_division"><span>注册</span></li>
+                </ul>
+                <div class="login_division active">
+                    <div class="login_division_inputG">
+                        <input class="a" placeholder="用户名" loginAreaId="userName" />
+                        <input type="password" placeholder="密码" loginAreaId="password" />
+                    </div>
+                    <div class="login_division_BtnG">
+                        <div class="btn btn-primary col-md-12" id="loginBtn">登录</div>
+                        <div class="remb_forg">
+                            <div class="checkbox"><label><input class="checkbox" type="checkbox"/>记住我</label></div>
+                            <span id="forgetPW">忘记密码</span>
+                        </div>
+                    </div>
+                    <div class="login_division_wechat">
+                        <div>微信登录</div>
+                        <div class="text-center">
+                            <img src="resources/images/avatar4.jpg" alt="please wait"/>
+                        </div>
+                        <div class="text-center">请使用微信扫描二维码登录</div>
+                    </div>
+                </div>
+                <div class="register_division">
+                    <div class="register_division_inputG">
+                        <input type="text" placeholder="用户名" registerAreaId="userName" />
+                        <input placeholder="手机号（仅支持中国大陆）" registerAreaId="userPhone" />
+                        <input type="email" placeholder="邮箱" registerAreaId="userEmail" />
+                        <input type="password" placeholder="密码（不少于6位）" registerAreaId="password" />
+                    </div>
+                    <div class="login_division_BtnG">
+                        <div class="register_division_checkG">
+                            <span>身份</span>
+                            <div class="radio"><label><input class="radio" name="register_identify" type="radio"/>在读大学生</label></div>
+                            <div class="radio"><label><input class="radio" name="register_identify" type="radio"/>已毕业就职</label></div>
+                        </div>
+                        <div class="btn btn-primary col-md-12" id="registerBtn">注册</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="main_body_right">
+            <section class="login_register_area">
+                <br/>
+                <br/>
+                <p>登陆后可以：</p>
+                <ol class="main_left_context">
+                    <!--<li><span>1、购买卡包，课程</span></li>-->
+                    <!--<li><span>2、回答问题赚取金币</span></li>-->
+                    <!--<li><span>3、查看别人的问题，学习技能</span></li>-->
+                    <!--<li><span>4、更多的服务</span></li>-->
+                    <li><span>1、提出问题，采纳满意答案</span></li>
+                    <li><span>2、回答问题，赚取金币</span></li>
+                    <li><span>3、查看别人的问题，学习技能</span></li>
+                    <li><span>4、更多的服务</span></li>
+                </ol>
+            </section>
+        </div>
+    </div>
+</main>
+
+<script data-main="resources/scripts/LoginAndRegister" src="resources/scripts/lib/require.js"></script>
+
+</body>
+</html>
